@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from "@nestjs/config";
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { GlobalConfig } from "./utils/GlobalMethods";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -11,4 +12,9 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
   controllers: [AppController],
   providers: [AppService,],
 })
-export class AppModule { }
+export class AppModule implements OnApplicationBootstrap {
+  onApplicationBootstrap() { 
+    GlobalConfig()
+  }
+
+}
