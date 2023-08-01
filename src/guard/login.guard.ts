@@ -3,8 +3,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { Role } from './entities/role.entity';
-
+import { Role } from '../user/entities/role.entity';
+import { AuthType } from '../utils/custom-decorator';
 declare module 'express' { 
   interface Request { 
     user: {
@@ -26,12 +26,9 @@ export class LoginGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const requireLogin = this.reflector.getAllAndOverride('require-login', [
-      context.getClass(),
-      context.getHandler()
-    ])
+    const requireLogin = this.reflector.get<AuthType>('require-auth', context.getHandler());
     //如果是require-login则返回undefined代表需要校验是否登录过， 否则返回true，不需要判断是否有authorization
-    if (!requireLogin) { 
+    if (requireLogin == 'login' || requireLogin == 'refresh') { 
       return true
     }
     const authorization = request.headers.authorization;

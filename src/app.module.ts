@@ -8,8 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { databaseConfig } from './utils/database'
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt'
-import { LoginGuard } from './user/login.guard';
-import { PermissionGuard } from './user/permission.guard';
+import { LoginGuard } from './guard/login.guard';
+import { PermissionGuard } from './guard/permission.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ ignoreEnvFile: true}),

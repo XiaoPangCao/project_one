@@ -127,4 +127,15 @@ export class UserService {
     })
     return roles;
   }
+  async findUserById(userid) { 
+    const userinfo = this.UserRepository.findOne({
+      where:{
+     id:userid
+      },
+      relations: {
+        roles:true
+      }
+    })
+    return userinfo
+  }
 }

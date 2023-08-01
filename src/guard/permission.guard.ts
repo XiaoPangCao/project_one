@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { UserService } from './user.service';
-import { Permission } from './entities/permission.entity'
+import { UserService } from '../user/user.service';
+import { Permission } from '../user/entities/permission.entity'
 import { Reflector } from '@nestjs/core';
 
 
@@ -33,12 +33,14 @@ export class PermissionGuard implements CanActivate {
      context.getClass(),
      context.getHandler()
    ])
+   if (requiredPermissions) { 
    for (let i = 0; i < requiredPermissions.length; i++) {
      const curPermission = requiredPermissions[i];
      const found = permissions.find(item => item.name === curPermission);
      if (!found) {
        throw new UnauthorizedException('您没有访问该接口的权限');
      }
+   }
    }
     return true;
   }
