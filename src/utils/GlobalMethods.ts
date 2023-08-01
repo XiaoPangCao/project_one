@@ -1,13 +1,16 @@
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import {ValidationPipe} from '@nestjs/common'
 import { AllExceptionsFilter } from "src/filter/any-exception.filter";
 import { TransformInterceptor } from '../interceptors/transform/transform.interceptor';
 import { HttpExceptionFilter } from '../filter/http-exception.filter';
 import * as packageConfig from "../../package.json";
 
+
 export const GlobalConfig = () => { 
   global.app.useGlobalInterceptors(new TransformInterceptor())
   global.app.useGlobalFilters(new AllExceptionsFilter());
   global.app.useGlobalFilters(new HttpExceptionFilter());
+  global.app.useGlobalPipes(new ValidationPipe())
   generateDocument()
 }
 

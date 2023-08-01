@@ -11,6 +11,6 @@ export const databaseConfig: TypeOrmModuleOptions = {
   synchronize: MYSQL.synchronize,
   logging: MYSQL.logging,
   entities: MYSQL.entities,
-  autoLoadEntities: MYSQL.autoLoadEntities,
+  autoLoadEntities: true,
   // 其他选项...
 };

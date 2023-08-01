@@ -2,25 +2,36 @@ import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from "@nestjs/config";
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalConfig } from "./utils/GlobalMethods";
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { databaseConfig } from './utils/database'
 import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt'
+import { LoginGuard } from './user/login.guard';
+import { PermissionGuard } from './user/permission.guard';
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      ignoreEnvFile: true
-    }),
+    ConfigModule.forRoot({ ignoreEnvFile: true}),
     TypeOrmModule.forRoot(databaseConfig),
+    JwtModule.register({ global: true, secret: 'xiaocao', signOptions: {expiresIn:'7d'} }),
     UserModule
   ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [
+    AppService,
+    {
+      provide:APP_GUARD,
+      useClass:LoginGuard
+    }, {
+      provide: APP_GUARD,
+      useClass:PermissionGuard
+    }
+  ],
 })
-export class AppModule implements OnApplicationBootstrap {
-  onApplicationBootstrap() { 
-    GlobalConfig()
-  }
+export class AppModule implements NestModule {
+configure(consumer: MiddlewareConsumer) {
+  GlobalConfig()
+}
 
 }

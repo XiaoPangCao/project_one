@@ -13,7 +13,6 @@ MYSQL:
   password: "cym19980206"
   database: "rbac_test"
   logging: true
-  entities: ["entity/*.js"]
   poolSize: 10
   connectorPackage: 'mysql2'
   autoLoadEntities: true
